@@ -22,3 +22,7 @@ Run a full pipeline on all runs with `./scripts/slurm/submit_full_processing.sh 
 2. Launch `1` sbatch run that will load all the point clouds and identify some median run (right now just looks at the initial pose; assuming all runs start at roughly the same initial pose)
 3. Launch `N` sbatch runs that will perform global and local point registration to align the clouds to the reference point cloud.
 4. All this uses `slurm --dependency` to manage the runs and trigger them to run after the previous step has concluded. 
+
+# License
+
+We use several libraries and their dependencies as shown in `pyproject.toml`. Please see each of these libraries for their respective licenses.
