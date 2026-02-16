@@ -1,0 +1,146 @@
+paths:
+  raw_data_dir: rw-pp/rw-pp-data-raw
+  clean_data_dir: rw-pp/rw-pp-data-clean
+  reports_dir: ${paths.clean_data_dir}/reports
+
+num_runs_to_process: null
+
+alignment:
+  enabled: true
+  run_ids: []
+  output_report: ${paths.reports_dir}/alignment_report.json
+  translation_threshold: 0.1
+  rotation_threshold_deg: 5.0
+  translation_std_threshold: 0.05
+  rotation_std_threshold_deg: 2.0
+
+optimization:
+  enabled: true
+  run_ids: []
+  output_root: ${paths.clean_data_dir}
+  poses_subdir: poses_optimized
+  skip_if_sentinel_exists: true
+  sentinel_filename: optim_sentinel.txt
+  report_dir: ${paths.reports_dir}/pose_optimization
+  prior_sigma_trans: 0.01
+  prior_sigma_rot: 0.01
+  odometry_sigma_trans: 0.02
+  odometry_sigma_rot: 0.05
+  max_iterations: 100
+  relative_error_tol: 1e-5
+  absolute_error_tol: 1e-5
+  verbosity: SILENT
+  rgbd:
+    enabled: false # set true to enable RGB-D pose constraints
+    depth_scale: 1000.0
+    min_depth: 0.1
+    max_depth: 10.0
+    odometry:
+      enabled: true
+      max_depth_diff: 0.07
+      iteration_pyramid: [20, 10, 5]
+    icp:
+      enabled: true
+      voxel_size: 0.02
+      max_corr: 0.05
+      max_iter: 30
+    sequential:
+      enabled: true
+      stride: 1
+      min_fitness: 0.15
+      max_rmse: 0.05
+    loop_closure:
+      enabled: false # set true to enable RGB-D loop-closure constraints
+      stride: 5
+      min_separation: 20
+      max_candidates: 5
+      max_distance_m: 1.5
+      max_angle_deg: 25.0
+      max_corr: 0.08
+      min_fitness: 0.25
+      max_rmse: 0.04
+    noise:
+      sigma_rot: 0.02
+      sigma_trans: 0.01
+      rmse_scale: 1.0
+      huber_k: 1.345
+
+pointcloud:
+  enabled: true
+  run_ids: []
+  output_root: ${paths.clean_data_dir}
+  poses_subdir: poses_optimized
+  skip_if_sentinel_exists: true
+  sentinel_filename: pointcloud_sentinel.txt
+  output_dense_name: point_cloud_dense.ply
+  output_filtered_name: point_cloud_filtered.ply
+  report_dir: ${paths.reports_dir}/point_clouds
+  depth_scale: 1000.0
+  min_depth: 0.1
+  max_depth: 10.0
+  use_every_n_frame: 4
+  voxel_size: 0.01
+  nb_neighbors: 20
+  std_ratio: 2.0
+  screenshots:
+    enabled: true
+    fail_on_error: true
+    output_subdir: pointcloud_screenshots
+    width: 1280
+    height: 720
+    point_size: 1.0
+    zoom: 0.7
+    background_color: [1.0, 1.0, 1.0]
+
+pointcloud_alignment:
+  enabled: true
+  run_ids: []
+  input_cloud_name: ${pointcloud.output_filtered_name}
+  input_dense_name: ${pointcloud.output_dense_name}
+  output_root: ${paths.clean_data_dir}
+  output_subdir: pointcloud_aligned
+  skip_if_sentinel_exists: true
+  sentinel_filename: pointcloud_alignment_sentinel.txt
+  output_filtered_name: point_cloud_filtered_aligned.ply
+  output_dense_name: point_cloud_dense_aligned.ply
+  report_dir: ${paths.reports_dir}/point_cloud_alignment
+  reference_selection:
+    strategy: oobb_center_median
+  global_registration:
+    enabled: true
+    voxel_size: 0.05
+    distance_threshold_factor: 1.5
+    ransac_n: 4
+    max_iterations: 400000
+    confidence: 0.999
+    mutual_filter: true
+    edge_length_threshold: 0.9
+  icp:
+    enabled: true
+    voxel_size: 0.02
+    max_corr: 0.05
+    max_iter: 50
+    method: point_to_plane
+  screenshots:
+    enabled: true
+    fail_on_error: true
+    output_subdir: alignment_comparison_screenshots
+    width: 1280
+    height: 720
+    point_size: 1.0
+    zoom: 0.7
+    background_color: [1.0, 1.0, 1.0]
+  debug_visualization:
+    enabled: false
+
+concurrency:
+  max_workers: 8
+
+USE_MULTIPROCESSING: false
+
+hydra:
+  run:
+    dir: .
+  output_subdir: null
+  job:
+    chdir: false
