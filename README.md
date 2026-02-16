@@ -1,6 +1,8 @@
 # Hamonize-Collected-SLAM
 Defines a pipeline using GTSAM and Open3D to perform pose estimation, RGBD constaints, loop closure, etc.; between different robot runs. Then, aligns the point clouds to some reference trajectory.
 
+<img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/b351deb1-1f24-4e76-963b-418fdac0885d" />
+
 # Installation
 
 ```bash
