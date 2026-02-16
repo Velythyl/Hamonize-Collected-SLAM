@@ -18,7 +18,7 @@ Run individual runs using `uv run main.py`
 
 Run a full pipeline on all runs with `./scripts/slurm/submit_full_processing.sh configs/config.yaml`. This will:
 
-1. Launch <N> sbatch runs that will optimize the poses and build point clouds using 8 CPUs, 32GB RAM, with a time limit of 8 hours.
-2. Launch <1> sbatch run that will load all the point clouds and identify some median run (right now just looks at the initial pose; assuming all runs start at roughly the same initial pose)
-3. Launch <N> sbatch runs that will perform global and local point registration to align the clouds to the reference point cloud.
+1. Launch `N` sbatch runs that will optimize the poses and build point clouds using 8 CPUs, 32GB RAM, with a time limit of 8 hours.
+2. Launch `1` sbatch run that will load all the point clouds and identify some median run (right now just looks at the initial pose; assuming all runs start at roughly the same initial pose)
+3. Launch `N` sbatch runs that will perform global and local point registration to align the clouds to the reference point cloud.
 4. All this uses `slurm --dependency` to manage the runs and trigger them to run after the previous step has concluded. 
